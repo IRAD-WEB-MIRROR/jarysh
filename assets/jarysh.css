@@ -297,3 +297,6 @@ body.cal-open .visitor { display: none; }
   .cal-tag { font-size: 2.2cqw; }
   .cal-cover .cal-foot img { height: 6cqw; }
 }
+.box.horse { border-top-color: var(--pink); }
+.box.horse .hw-name { font: 700 30px/1.1 Anton, Oswald, sans-serif; letter-spacing: .02em; margin: 4px 0; color: var(--gold); }
+.box.horse .hw-name span { font: 700 14px Oswald, sans-serif; color: inherit; opacity: .75; margin-left: 6px; vertical-align: middle; }
