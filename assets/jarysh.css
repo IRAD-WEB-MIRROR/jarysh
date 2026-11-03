@@ -300,3 +300,15 @@ body.cal-open .visitor { display: none; }
 .box.horse { border-top-color: var(--pink); }
 .box.horse .hw-name { font: 700 30px/1.1 Anton, Oswald, sans-serif; letter-spacing: .02em; margin: 4px 0; color: var(--gold); }
 .box.horse .hw-name span { font: 700 14px Oswald, sans-serif; color: inherit; opacity: .75; margin-left: 6px; vertical-align: middle; }
+
+/* tipping league */
+button.odds.tip { cursor: pointer; margin: 2px 0; }
+button.odds.tip.on { background: var(--gold); color: #000; box-shadow: 0 0 0 2px #fff; }
+button.odds.tip:disabled { cursor: default; opacity: .55; }
+button.odds.tip.on:disabled { opacity: 1; }
+table.t.tips td:nth-child(3) { white-space: nowrap; }
+.tip-bank { width: 18px; height: 18px; accent-color: var(--gold); }
+.tip-name { background: #000; color: var(--gold2); border: 1px solid var(--gold); font: 700 14px Oswald, sans-serif; padding: 5px 8px; border-radius: 3px; width: 180px; max-width: 100%; }
+.tip-share { display: block; width: 100%; margin: 6px 0 8px; background: #000; color: var(--text); border: 1px solid var(--line); font: 14px/1.4 "Roboto Condensed", sans-serif; padding: 8px; resize: vertical; }
+.tip-clear { background: none; border: 1px solid var(--line); color: var(--muted); font: 12px "Roboto Condensed", sans-serif; padding: 4px 8px; cursor: pointer; }
+@media (max-width: 640px) { table.t.tips td:nth-child(3) { white-space: normal; } button.odds.tip { min-width: 40px; padding: 3px 4px; } }
