@@ -24,7 +24,7 @@
   function svg(id, w) {
     var B = c(S.b), B2 = c(S.b2), Sl = c(S.s), Sl2 = c(S.s2), C = c(S.c), C2 = c(S.c2), o = "", i, y;
     var M = ["body", "sleeveL", "sleeveR", "cuffL", "cuffR", "collar", "dome", "peak"];
-    o += '<svg viewBox="150 28 500 744" width="' + w + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Racing silks: ' + esc(describe()) + '" style="display:block;border-radius:6px"><defs>';
+    o += '<svg viewBox="160 28 480 716" width="' + w + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Racing silks: ' + esc(describe()) + '" style="display:block"><defs>';
     M.forEach(function (k) { o += '<mask id="' + id + k + '" maskUnits="userSpaceOnUse" x="0" y="0" width="800" height="800"><image href="' + IMG + "m-" + k + '.png" xlink:href="' + IMG + "m-" + k + '.png" x="0" y="0" width="800" height="800"/></mask>'; });
     o += '</defs><image href="' + IMG + 'base.webp" xlink:href="' + IMG + 'base.webp" x="0" y="0" width="800" height="800"/><g style="mix-blend-mode:multiply">';
     function panel(k, fill, inner) { return '<g mask="url(#' + id + k + ')"><rect x="0" y="0" width="800" height="800" fill="' + fill + '"/>' + (inner || "") + "</g>"; }
