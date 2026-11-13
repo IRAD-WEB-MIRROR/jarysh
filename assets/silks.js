@@ -18,88 +18,54 @@
   function c(i) { return COL[i][1]; }
   function star(cx, cy, r, f) { var p = []; for (var i = 0; i < 10; i++) { var a = Math.PI / 5 * i - Math.PI / 2, rr = i % 2 ? r * .45 : r; p.push((cx + rr * Math.cos(a)).toFixed(1) + "," + (cy + rr * Math.sin(a)).toFixed(1)); } return '<polygon fill="' + f + '" points="' + p.join(" ") + '"/>'; }
 
-  /* jacket and cap, drawn in a 240 x 250 box: cap at the top, jacket below; patterns are clipped to each panel and a
-     light-from-the-left shading and a few folds go over them */
+  /* the drawing (img/silks/base.webp) is coloured by masks, one per panel (img/silks/m-*.png), with the line art
+     multiplied over the colours so its outlines, folds and shading stay. Coordinates are the 800 x 800 drawing's. */
+  var IMG = "img/silks/";
   function svg(id, w) {
-    var B = c(S.b), B2 = c(S.b2), Sl = c(S.s), Sl2 = c(S.s2), C = c(S.c), C2 = c(S.c2), o = "", i;
-    var LINE = "#1b1420";
-    var torso = "M80 64 C90 60 98 57 105 54 C110 64 130 64 135 54 C142 57 150 60 160 64 C164 92 167 120 164 150 C163 172 164 190 166 204 C136 213 104 213 74 204 C76 190 77 172 76 150 C73 120 76 92 80 64 Z";
-    var slL = "M80 64 C66 68 56 76 50 90 C42 110 36 140 30 172 C38 178 50 180 58 178 C62 154 68 132 76 112 C77 96 78 80 80 64 Z";
-    var slR = "M160 64 C174 68 184 76 190 90 C198 110 204 140 210 172 C202 178 190 180 182 178 C178 154 172 132 164 112 C163 96 162 80 160 64 Z";
-    var collar = "M105 54 C110 64 130 64 135 54 C133 52 131 51 129 50 C126 57 114 57 111 50 C109 51 107 52 105 54 Z";
-    var dome = "M84 52 C84 22 100 8 120 8 C140 8 156 22 156 52 C140 56 100 56 84 52 Z";
-    var peak = "M112 50 C128 49 150 49 170 54 C175 56 175 60 169 61 C152 63 132 60 112 57 C109 55 109 51 112 50 Z";
-    function shade(path, gid) { return '<path d="' + path + '" fill="url(#' + id + gid + ')"/>'; }
-    o += '<svg viewBox="0 0 240 272" width="' + w + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Racing silks: ' + esc(describe()) + '"><defs>' +
-      '<clipPath id="' + id + 'b"><path d="' + torso + '"/></clipPath>' +
-      '<clipPath id="' + id + 'l"><path d="' + slL + '"/></clipPath><clipPath id="' + id + 'r"><path d="' + slR + '"/></clipPath>' +
-      '<clipPath id="' + id + 'c"><path d="' + dome + '"/></clipPath>' +
-      '<linearGradient id="' + id + 'gb" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".30"/><stop offset=".18" stop-color="#000" stop-opacity=".06"/><stop offset=".38" stop-color="#fff" stop-opacity=".22"/><stop offset=".55" stop-color="#fff" stop-opacity=".04"/><stop offset=".85" stop-color="#000" stop-opacity=".14"/><stop offset="1" stop-color="#000" stop-opacity=".34"/></linearGradient>' +
-      '<linearGradient id="' + id + 'gs" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".30"/><stop offset=".45" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".30"/></linearGradient>' +
-      '<radialGradient id="' + id + 'gc" cx=".38" cy=".3" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".45" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>' +
-      '<linearGradient id="' + id + 'gp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".15"/><stop offset="1" stop-color="#000" stop-opacity=".40"/></linearGradient>' +
-      '<filter id="' + id + 'ds" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity=".35"/></filter></defs>';
-
-    o += '<g transform="translate(0 24)">';
-    /* sleeves */
-    var sp = SLV[S.sp];
-    [["l", slL, 54, 1], ["r", slR, 186, -1]].forEach(function (a) {
-      var k = a[0], cx = a[2];
-      o += '<g clip-path="url(#' + id + k + ')"><rect width="240" height="250" fill="' + Sl + '"/>';
-      if (sp === "Hoops") for (var y = 82; y < 182; y += 18) o += '<path d="M0 ' + y + ' L240 ' + (y + 10 * a[3] * -0.3) + ' L240 ' + (y + 9) + ' L0 ' + (y + 9) + ' Z" fill="' + Sl2 + '"/>';
-      if (sp === "Armlets") o += '<path d="M0 128 L240 128 L240 142 L0 142 Z" fill="' + Sl2 + '" transform="rotate(' + (-10 * a[3]) + ' ' + cx + ' 135)"/>';
-      if (sp === "Stars") { o += star(cx + 2 * a[3], 110, 8, Sl2) + star(cx - 4 * a[3], 146, 8, Sl2); }
-      if (sp === "Seams") o += '<path d="M' + (cx + 12 * a[3]) + ' 70 C' + (cx + 4 * a[3]) + ' 110 ' + (cx - 6 * a[3]) + ' 140 ' + (cx - 10 * a[3]) + ' 180" fill="none" stroke="' + Sl2 + '" stroke-width="7"/>';
-            if (sp === "Cuffs") o += '<rect x="0" y="160" width="240" height="30" fill="' + Sl2 + '"/>';
-      if (sp === "Chevrons") for (var y2 = 92; y2 < 180; y2 += 26) o += '<path d="M' + (cx - 30) + ' ' + y2 + ' L' + cx + ' ' + (y2 + 14) + ' L' + (cx + 30) + ' ' + y2 + '" fill="none" stroke="' + Sl2 + '" stroke-width="7"/>';
-      o += shade(a[1], "gs");
-      o += '<path d="M' + (cx - 22 * a[3]) + ' 166 C' + (cx - 10 * a[3]) + ' 168 ' + (cx + 2 * a[3]) + ' 168 ' + (cx + 10 * a[3]) + ' 166" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="2"/>';
-      o += '<path d="M' + (cx + 8 * a[3]) + ' 96 C' + (cx + 2 * a[3]) + ' 120 ' + (cx - 2 * a[3]) + ' 136 ' + (cx - 4 * a[3]) + ' 150" fill="none" stroke="rgba(0,0,0,.16)" stroke-width="3" stroke-linecap="round"/>';
-      o += "</g>";
-    });
-    o += '<path d="' + slL + '" fill="none" stroke="' + LINE + '" stroke-width="2" stroke-linejoin="round"/><path d="' + slR + '" fill="none" stroke="' + LINE + '" stroke-width="2" stroke-linejoin="round"/>';
+    var B = c(S.b), B2 = c(S.b2), Sl = c(S.s), Sl2 = c(S.s2), C = c(S.c), C2 = c(S.c2), o = "", i, y;
+    var M = ["body", "sleeveL", "sleeveR", "cuffL", "cuffR", "collar", "dome", "peak"];
+    o += '<svg viewBox="150 28 500 744" width="' + w + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Racing silks: ' + esc(describe()) + '" style="display:block;border-radius:6px"><defs>';
+    M.forEach(function (k) { o += '<mask id="' + id + k + '" maskUnits="userSpaceOnUse" x="0" y="0" width="800" height="800"><image href="' + IMG + "m-" + k + '.png" xlink:href="' + IMG + "m-" + k + '.png" x="0" y="0" width="800" height="800"/></mask>'; });
+    o += '</defs><image href="' + IMG + 'base.webp" xlink:href="' + IMG + 'base.webp" x="0" y="0" width="800" height="800"/><g style="mix-blend-mode:multiply">';
+    function panel(k, fill, inner) { return '<g mask="url(#' + id + k + ')"><rect x="0" y="0" width="800" height="800" fill="' + fill + '"/>' + (inner || "") + "</g>"; }
 
     /* body */
-    o += '<g clip-path="url(#' + id + 'b)"><rect width="240" height="250" fill="' + B + '"/>';
-    var bp = BODY[S.bp];
-    if (bp === "Hoops") for (i = 76; i < 214; i += 28) o += '<path d="M60 ' + i + ' Q120 ' + (i + 5) + ' 180 ' + i + ' L180 ' + (i + 14) + ' Q120 ' + (i + 19) + ' 60 ' + (i + 14) + ' Z" fill="' + B2 + '"/>';
-    if (bp === "Stripes") for (i = 81; i < 170; i += 20) o += '<rect x="' + i + '" y="40" width="10" height="180" fill="' + B2 + '"/>';
-    if (bp === "Chevrons") for (i = 84; i < 214; i += 32) o += '<path d="M64 ' + i + ' L120 ' + (i + 28) + ' L176 ' + i + '" fill="none" stroke="' + B2 + '" stroke-width="11"/>';
-    if (bp === "Cross-belts") o += '<path d="M84 60 L162 208 M156 60 L78 208" stroke="' + B2 + '" stroke-width="15"/>';
-    if (bp === "Sash") o += '<path d="M86 58 L164 210" stroke="' + B2 + '" stroke-width="20"/>';
-    if (bp === "Quartered") o += '<rect x="120" y="40" width="70" height="92" fill="' + B2 + '"/><rect x="50" y="132" width="70" height="90" fill="' + B2 + '"/>';
-    if (bp === "Diamond") o += '<polygon points="120,98 148,134 120,170 92,134" fill="' + B2 + '"/>';
-    if (bp === "Spots") for (i = 0; i < 12; i++) o += '<circle cx="' + (92 + (i % 3) * 28 + (Math.floor(i / 3) % 2) * 0) + '" cy="' + (88 + Math.floor(i / 3) * 32) + '" r="7" fill="' + B2 + '"/>';
-    if (bp === "Star") o += star(120, 132, 30, B2);
-    if (bp === "Braces") o += '<path d="M96 56 L94 210 M144 56 L146 210" stroke="' + B2 + '" stroke-width="10"/>';
-    if (bp === "Halved") o += '<rect x="120" y="40" width="70" height="190" fill="' + B2 + '"/>';
-    o += shade(torso, "gb");
-    o += '<path d="M90 176 C96 188 96 198 92 208 M150 176 C144 188 144 198 148 208 M82 92 C88 102 88 112 84 124 M158 92 C152 102 152 112 156 124 M110 70 C116 74 124 74 130 70" fill="none" stroke="rgba(0,0,0,.16)" stroke-width="3" stroke-linecap="round"/>';
-    o += '<path d="M104 196 C114 200 126 200 136 196" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2"/>';
-    o += "</g>";
-    o += '<path d="' + collar + '" fill="' + B + '" stroke="' + LINE + '" stroke-width="1.5"/><path d="' + collar + '" fill="url(#' + id + 'gp)"/>';
-    o += '<path d="' + torso + '" fill="none" stroke="' + LINE + '" stroke-width="2.2" stroke-linejoin="round"/>';
-    o += '<path d="M76 196 C104 203 136 203 164 196" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="1.5" stroke-dasharray="3 3"/>';
+    var bp = BODY[S.bp], b = "";
+    if (bp === "Hoops") for (y = 286; y < 730; y += 58) b += '<path d="M240 ' + y + ' Q413 ' + (y + 14) + ' 600 ' + y + ' L600 ' + (y + 28) + ' Q413 ' + (y + 42) + ' 240 ' + (y + 28) + ' Z" fill="' + B2 + '"/>';
+    if (bp === "Stripes") for (i = 283; i < 560; i += 42) b += '<rect x="' + i + '" y="200" width="21" height="560" fill="' + B2 + '"/>';
+    if (bp === "Chevrons") for (y = 290; y < 740; y += 84) b += '<path d="M240 ' + y + ' L413 ' + (y + 66) + ' L600 ' + y + '" fill="none" stroke="' + B2 + '" stroke-width="26"/>';
+    if (bp === "Cross-belts") b += '<path d="M292 262 L548 716 M534 262 L280 716" stroke="' + B2 + '" stroke-width="36"/>';
+    if (bp === "Sash") b += '<path d="M300 258 L552 712" stroke="' + B2 + '" stroke-width="50"/>';
+    if (bp === "Quartered") b += '<rect x="413" y="200" width="200" height="280" fill="' + B2 + '"/><rect x="200" y="480" width="213" height="280" fill="' + B2 + '"/>';
+    if (bp === "Halved") b += '<rect x="413" y="200" width="200" height="560" fill="' + B2 + '"/>';
+    if (bp === "Braces") b += '<path d="M352 250 L350 730 M480 250 L484 730" stroke="' + B2 + '" stroke-width="24"/>';
+    if (bp === "Diamond") b += '<polygon points="413,372 485,470 413,568 341,470" fill="' + B2 + '"/>';
+    if (bp === "Spots") for (i = 0; i < 15; i++) b += '<circle cx="' + (330 + (i % 3) * 82 + (Math.floor(i / 3) % 2) * 0) + '" cy="' + (318 + Math.floor(i / 3) * 92) + '" r="17" fill="' + B2 + '"/>';
+    if (bp === "Star") b += star(413, 470, 92, B2);
+    o += panel("body", B, b) + panel("collar", B);
 
-    o += '</g>';
-    /* cap: dome, button, seams, peak */
-    var cg = '<g transform="translate(0 -2)">';
-    cg += '<g clip-path="url(#' + id + 'c)"><rect width="240" height="70" fill="' + C + '"/>';
-    var cp = CAP[S.cp];
-    if (cp === "Quartered") cg += '<path d="M120 0 L170 0 L170 30 L120 30 Z M70 30 L120 30 L120 60 L70 60 Z" fill="' + C2 + '"/>';
-    if (cp === "Hooped") for (i = 18; i < 56; i += 12) cg += '<rect x="60" y="' + i + '" width="120" height="6" fill="' + C2 + '"/>';
-    if (cp === "Star") cg += star(120, 33, 12, C2);
-    if (cp === "Spots") cg += '<circle cx="104" cy="30" r="5" fill="' + C2 + '"/><circle cx="136" cy="30" r="5" fill="' + C2 + '"/><circle cx="120" cy="44" r="5" fill="' + C2 + '"/><circle cx="120" cy="20" r="4" fill="' + C2 + '"/>';
-    if (cp === "Stripe") cg += '<rect x="112" y="0" width="16" height="60" fill="' + C2 + '"/>';
-    cg += '<path d="M120 8 C112 24 108 38 107 54 M120 8 C128 24 132 38 133 54 M120 8 C100 16 90 32 88 52 M120 8 C140 16 150 32 152 52" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1.2"/>';
-    cg += shade(dome, "gc") + "</g>";
-    cg += '<path d="' + dome + '" fill="none" stroke="' + LINE + '" stroke-width="2" stroke-linejoin="round"/>';
-    var pc = cp === "Contrast peak" ? C2 : C;
-    cg += '<path d="' + peak + '" fill="' + pc + '" stroke="' + LINE + '" stroke-width="2" stroke-linejoin="round"/><path d="' + peak + '" fill="url(#' + id + 'gp)"/>';
-    cg += '<path d="M116 54 C134 54 152 55 168 58" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.2" stroke-dasharray="2.5 2.5"/>';
-    cg += '<ellipse cx="120" cy="9" rx="5" ry="3.2" fill="' + (cp === "Plain" || cp === "Contrast peak" ? C : C2) + '" stroke="' + LINE + '" stroke-width="1.5"/></g>';
-    o += '<g filter="url(#' + id + 'ds)">' + cg + "</g>";
-    o += "</svg>";
+    /* sleeves: patterns run across each sleeve's own axis */
+    var sp = SLV[S.sp];
+    [["sleeveL", 248, 500, 10.4, "cuffL"], ["sleeveR", 566, 500, -5.7, "cuffR"]].forEach(function (a) {
+      var cx = a[1], cy = a[2], s = '<g transform="rotate(' + a[3] + " " + cx + " " + cy + ')">';
+      if (sp === "Hoops") for (y = 318; y < 720; y += 46) s += '<rect x="' + (cx - 120) + '" y="' + y + '" width="240" height="22" fill="' + Sl2 + '"/>';
+      if (sp === "Armlets") s += '<rect x="' + (cx - 120) + '" y="' + (cy + 10) + '" width="240" height="34" fill="' + Sl2 + '"/>';
+      if (sp === "Stars") s += star(cx, cy - 70, 22, Sl2) + star(cx, cy + 60, 22, Sl2);
+      if (sp === "Seams") s += '<rect x="' + (cx - 8) + '" y="280" width="16" height="460" fill="' + Sl2 + '"/>';
+      if (sp === "Chevrons") for (y = 340; y < 680; y += 62) s += '<path d="M' + (cx - 80) + " " + y + " L" + cx + " " + (y + 34) + " L" + (cx + 80) + " " + y + '" fill="none" stroke="' + Sl2 + '" stroke-width="16"/>';
+      s += "</g>";
+      o += panel(a[0], Sl, s) + panel(a[4], sp === "Cuffs" ? Sl2 : Sl);
+    });
+
+    /* cap */
+    var cp = CAP[S.cp], k2 = "";
+    if (cp === "Quartered") k2 += '<path d="M410 30 L520 30 L520 112 L410 112 Z M300 112 L410 112 L410 200 L300 200 Z" fill="' + C2 + '"/>';
+    if (cp === "Hooped") for (y = 62; y < 190; y += 28) k2 += '<rect x="290" y="' + y + '" width="230" height="13" fill="' + C2 + '"/>';
+    if (cp === "Star") k2 += star(424, 112, 30, C2);
+    if (cp === "Spots") k2 += '<circle cx="390" cy="90" r="11" fill="' + C2 + '"/><circle cx="450" cy="92" r="11" fill="' + C2 + '"/><circle cx="420" cy="140" r="11" fill="' + C2 + '"/><circle cx="465" cy="140" r="11" fill="' + C2 + '"/><circle cx="360" cy="135" r="11" fill="' + C2 + '"/>';
+    if (cp === "Stripe") k2 += '<path d="M392 40 L428 40 L446 190 L404 190 Z" fill="' + C2 + '"/>';
+    o += panel("dome", C, k2) + panel("peak", cp === "Contrast peak" ? C2 : C);
+    o += "</g></svg>";
     return o;
   }
   function describe() {
