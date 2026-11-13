@@ -34,8 +34,9 @@
   function bodyUV(x, y) {
     var dx = x - 411, dy = y - 262, a = dx * SA + dy * CA, q = dx * CA - dy * SA, k = q / 160;
     if (k > 1) k = 1; if (k < -1) k = -1;
-    var th = Math.asin(k), b = 12 + 28 * Math.min(1, Math.max(0, a / 460));
-    return [160 * th, a + b * (1 - Math.cos(th))];
+    var f = Math.min(1, Math.max(0, a / 460)), th = Math.asin(k), b = 12 + 28 * f;
+    /* the centre front is not on the axis: the torso is turned, so it runs from (395,265) to (390,715) (Chief's line) */
+    return [160 * (th - (-0.1 - 0.153 * f)), a + b * (1 - Math.cos(th))];
   }
   function pl(T, z) { /* piecewise-linear table [z0,v0, z1,v1, ...] */
     if (z <= T[0]) return T[1];
