@@ -42,6 +42,8 @@
     if (bp === "Diamond") b += '<polygon points="413,372 485,470 413,568 341,470" fill="' + B2 + '"/>';
     if (bp === "Spots") for (i = 0; i < 15; i++) b += '<circle cx="' + (330 + (i % 3) * 82 + (Math.floor(i / 3) % 2) * 0) + '" cy="' + (318 + Math.floor(i / 3) * 92) + '" r="17" fill="' + B2 + '"/>';
     if (bp === "Star") b += star(413, 470, 92, B2);
+    /* the drawing leans a little to the left: centre the body patterns on its front (x 403) and tilt them with it */
+    if (b) b = '<g transform="rotate(-2 403 480) translate(-10 0)">' + b + "</g>";
     o += panel("body", B, b) + panel("collar", B);
 
     /* sleeves: patterns run across each sleeve's own axis */
@@ -59,11 +61,11 @@
 
     /* cap */
     var cp = CAP[S.cp], k2 = "";
-    if (cp === "Quartered") k2 += '<path d="M410 30 L520 30 L520 112 L410 112 Z M300 112 L410 112 L410 200 L300 200 Z" fill="' + C2 + '"/>';
-    if (cp === "Hooped") for (y = 62; y < 190; y += 28) k2 += '<rect x="290" y="' + y + '" width="230" height="13" fill="' + C2 + '"/>';
-    if (cp === "Star") k2 += star(424, 112, 30, C2);
-    if (cp === "Spots") k2 += '<circle cx="390" cy="90" r="11" fill="' + C2 + '"/><circle cx="450" cy="92" r="11" fill="' + C2 + '"/><circle cx="420" cy="140" r="11" fill="' + C2 + '"/><circle cx="465" cy="140" r="11" fill="' + C2 + '"/><circle cx="360" cy="135" r="11" fill="' + C2 + '"/>';
-    if (cp === "Stripe") k2 += '<path d="M392 40 L428 40 L446 190 L404 190 Z" fill="' + C2 + '"/>';
+    if (cp === "Quartered") k2 += /* the front quarter, between the two seams of the drawing */ '<path d="M412 36 L383 60 L376 66 L371 72 L367 78 L364 84 L361 90 L359 96 L358 102 L354 200 L441 200 L440 120 L440 90 L439 84 L437 78 L435 72 L432 66 L428 60 Z" fill="' + C2 + '"/>';
+    if (cp === "Hooped") { k2 += '<g transform="rotate(8 405 110)">'; for (y = 50; y < 190; y += 28) k2 += '<rect x="280" y="' + y + '" width="250" height="13" fill="' + C2 + '"/>'; k2 += "</g>"; }
+    if (cp === "Star") k2 += star(404, 84, 28, C2);
+    if (cp === "Spots") k2 += '<circle cx="378" cy="84" r="11" fill="' + C2 + '"/><circle cx="436" cy="76" r="11" fill="' + C2 + '"/><circle cx="406" cy="118" r="11" fill="' + C2 + '"/><circle cx="462" cy="122" r="11" fill="' + C2 + '"/><circle cx="350" cy="122" r="11" fill="' + C2 + '"/>';
+    if (cp === "Stripe") k2 += '<path d="M396 40 L426 40 L416 190 L370 190 Z" fill="' + C2 + '"/>';
     o += panel("dome", C, k2) + panel("peak", cp === "Contrast peak" ? C2 : C);
     o += "</g></svg>";
     return o;
